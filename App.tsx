@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StatusBar, View, Text, StyleSheet, Animated, Easing } from 'react-native';
+import { StatusBar, View, Text, StyleSheet, Animated, Easing, Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
@@ -27,14 +27,16 @@ import { getDb } from './src/database/database';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
+const useNativeAnimations = Platform.OS !== 'web';
+
 function BrandSplash() {
   const scale = useRef(new Animated.Value(0.7)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.parallel([
-      Animated.timing(scale, { toValue: 1, duration: 650, easing: Easing.out(Easing.back(1.5)), useNativeDriver: true }),
-      Animated.timing(opacity, { toValue: 1, duration: 500, useNativeDriver: true }),
+      Animated.timing(scale, { toValue: 1, duration: 650, easing: Easing.out(Easing.back(1.5)), useNativeDriver: useNativeAnimations }),
+      Animated.timing(opacity, { toValue: 1, duration: 500, useNativeDriver: useNativeAnimations }),
     ]).start();
   }, []);
 

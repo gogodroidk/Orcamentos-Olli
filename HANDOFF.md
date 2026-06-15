@@ -52,17 +52,20 @@ app Expo/React Native** e empilhar as features (ver Roadmap). O dono **quer vend
 - `OLLI App.dc.html` é o protótipo PRINCIPAL (app navegável). Os outros são telas individuais.
 - ⚠️ São **referência visual/comportamental**, NÃO copiar como código. Recriar em RN/Expo.
 
-### 2.4 Fundação do design system no APP (Fase 1 — EM ANDAMENTO, NÃO verificado)
-Mudanças já aplicadas no working tree (incluídas neste zip), mas **`npm install`+`tsc` ainda NÃO rodaram com sucesso** (interrompido):
+### 2.4 Fundação do design system no APP (Fase 1 — EM ANDAMENTO, verificado parcialmente)
+Mudanças já aplicadas no working tree (incluídas neste zip). A base agora instala e o app TypeScript passa no preflight:
 - `src/theme/index.ts` — **reescrito** para o tema **escuro "cockpit"** (tokens de cor/sombra/tipografia),
   + paleta clara `Doc` para PDF/link do cliente, + `Typography.display/serifTitle/serifNum` (Spectral), MD3DarkTheme.
 - `src/theme/fonts.ts` — adicionados slots serif (`serif`, `serifMedium`, `serifBold` = Spectral).
 - `App.tsx` — carrega Spectral via `useFonts`.
 - `package.json` — adicionada dep `@expo-google-fonts/spectral@^0.4.1`.
 - `src/components/OlliCard.tsx` — borda sutil (estilo "vidro" do tema escuro).
-- `src/steps/Step1Cliente.tsx` — **convertido de ISO-8859 → UTF-8** (bug pré-existente que quebrava o tsc).
+- `src/steps/Step1Cliente.tsx` — **convertido de ISO-8859 → UTF-8** e corrigidos os nomes de estilos quebrados que travavam o `tsc`.
+- `metro.config.js` — suporte a `.wasm` e headers COOP/COEP para a prévia web do app Expo com `expo-sqlite`.
+- `src/config.ts` — Supabase movido para `.env.local` / `EXPO_PUBLIC_*`, sem chave hardcoded no código do app.
+- `supabase/migrations/20260615160744_harden_rls_and_function_permissions.sql` — hardening da função `rls_auto_enable()` e policies RLS otimizadas.
 
-**Próximo passo técnico imediato:** `npm install` → `npx tsc --noEmit` e corrigir o que sobrar (ver Gotchas).
+**Verificado em 2026-06-15:** `npm install`, `npm run preflight`, Supabase advisors pós-hardening e QA web do app Expo em desktop/mobile.
 
 ---
 
@@ -124,10 +127,8 @@ Mudanças já aplicadas no working tree (incluídas neste zip), mas **`npm insta
   "File appears to be binary", é encoding — rodar `iconv -f ISO-8859-1 -t UTF-8 arquivo > tmp && mv tmp arquivo`.
 - **Não dá pra verificar o visual do RN em ambiente headless** — validar rodando no **Expo Go**
   (iPhone: abrir a Câmera no QR code do `npx expo start`; estar na mesma Wi-Fi).
-- **Supabase — 2 avisos de segurança** (recomendado resolver):
-  1. Função pré-existente `public.rls_auto_enable()` é SECURITY DEFINER exposta a anon/authenticated →
-     `revoke execute on function public.rls_auto_enable() from anon, authenticated;`
-  2. Proteção contra senha vazada desligada → ligar em Dashboard → Authentication → Providers → Password.
+- **Supabase — aviso restante de segurança:** proteção contra senha vazada desligada → ligar em Dashboard → Authentication → Providers → Password.
+- A função pré-existente `public.rls_auto_enable()` já teve execução revogada para `anon/authenticated/public` e as policies RLS foram otimizadas com `(select auth.uid())`.
 - `app.json`: `extra.eas.projectId` é **placeholder** — rodar `eas init` p/ um projectId real do EAS.
 - Falta `assets/android-icon-background.png` (uma camada do ícone adaptativo Android) — o dono vai subir; não bloqueia.
 
