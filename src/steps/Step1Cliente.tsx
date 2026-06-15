@@ -78,7 +78,7 @@ export default function Step1Cliente({ orc, onChange }: Props) {
       contentContainerStyle={{ padding: Spacing.base, paddingBottom: 40 }}
       keyboardShouldPersistTaps="handled"
     >
-      <Text style={styles.stepTitle}>Para quem é o orçamento?</Text>
+      <Text style={styles.stepTitle}>Para quem Ã© o orÃ§amento?</Text>
       <Text style={styles.stepHint}>Busque um cliente cadastrado ou crie um novo.</Text>
 
       {/* BUSCA */}
@@ -104,10 +104,10 @@ export default function Step1Cliente({ orc, onChange }: Props) {
           {results.map(c => (
             <TouchableOpacity key={c.id} style={styles.dropItem} onPress={() => selectCliente(c)} activeOpacity={0.7}>
               <View style={styles.dropAvatar}>
-                <Text style={styles.c�opAvatarText}>{c.nome.charAt(0).toUpperCase()}</Text>
+                <Text style={styles.còopAvatarText}>{c.nome.charAt(0).toUpperCase()}</Text>
               </View>
               <View style={{ flex: 1, marginLeft: 10 }}>
-                <Text style={styles.c�opName}>{c.nome}</Text>
+                <Text style={styles.còopName}>{c.nome}</Text>
                 <Text style={styles.dropPhone}>{c.telefone || 'Sem telefone'}</Text>
               </View>
               <MaterialCommunityIcons name="chevron-right" size={20} color={Colors.onSurfaceMuted} />
@@ -161,14 +161,14 @@ export default function Step1Cliente({ orc, onChange }: Props) {
             </TouchableOpacity>
           </View>
           <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: Spacing.base }} keyboardShouldPersistTaps="handled">
-            <OlliInput label="Nome completo" required value={nc.nome ?? ''} onChangeText={v => setNc(p => ({ ...p, nome: v }))} placeholder="Ex: João da Silva" leftIcon="account" />
+            <OlliInput label="Nome completo" required value={nc.nome ?? ''} onChangeText={v => setNc(p => ({ ...p, nome: v }))} placeholder="Ex: JoÃ£o da Silva" leftIcon="account" />
             <OlliInput label="Telefone / WhatsApp" mask="phone" value={nc.telefone ?? ''} onChangeText={v => setNc(p => ({ ...p, telefone: v }))} placeholder="(11) 99999-9999" leftIcon="phone" />
             <OlliInput label="CPF" mask="cpf" value={nc.cpf ?? ''} onChangeText={v => setNc(p => ({ ...p, cpf: v }))} placeholder="000.000.000-00" leftIcon="card-account-details" />
             <OlliInput label="CNPJ" mask="cnpj" value={nc.cnpj ?? ''} onChangeText={v => setNc(p => ({ ...p, cnpj: v }))} placeholder="00.000.000/0001-00" leftIcon="domain" />
-            <OlliInput label="Endereço" value={nc.endereco ?? ''} onChangeText={v => setNc(p => ({ ...p, endereco: v }))} placeholder="Rua, número" leftIcon="map-marker" />
-            <OlliInput label="Complemento" value={nc.complemento ?? ''} onChangeText={v => setNc(p => ({ ...p, complemento: v }))} placeholder="Apto, bloco, referência" />
+            <OlliInput label="EndereÃ§o" value={nc.endereco ?? ''} onChangeText={v => setNc(p => ({ ...p, endereco: v }))} placeholder="Rua, nÃºmero" leftIcon="map-marker" />
+            <OlliInput label="Complemento" value={nc.complemento ?? ''} onChangeText={v => setNc(p => ({ ...p, complemento: v }))} placeholder="Apto, bloco, referÃªncia" />
             <View style={styles.rowFields}>
-              <OlliInput label="Cidade" value={nc.cidade ?? ''} onChangeText={v => setNc(p => ({ ...p, cidade: v }))} placeholder="São Paulo" containerStyle={{ flex: 2, marginRight: 10 }} />
+              <OlliInput label="Cidade" value={nc.cidade ?? ''} onChangeText={v => setNc(p => ({ ...p, cidade: v }))} placeholder="SÃ£o Paulo" containerStyle={{ flex: 2, marginRight: 10 }} />
               <OlliInput label="UF" value={nc.estado ?? ''} onChangeText={v => setNc(p => ({ ...p, estado: v.toUpperCase().slice(0, 2) }))} placeholder="SP" autoCapitalize="characters" maxLength={2} containerStyle={{ flex: 1 }} />
             </View>
             <OlliInput label="CEP" mask="cep" value={nc.cep ?? ''} onChangeText={v => setNc(p => ({ ...p, cep: v }))} placeholder="00000-000" leftIcon="mailbox" />
