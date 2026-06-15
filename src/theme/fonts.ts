@@ -7,6 +7,11 @@ export const Fonts = {
   semiBold: 'PlusJakartaSans_600SemiBold',
   bold: 'PlusJakartaSans_700Bold',
   extraBold: 'PlusJakartaSans_800ExtraBold',
+  // Serifada editorial (Spectral) — títulos de documento e números de destaque (PDF, "Orçamento", totais).
+  // Usada explicitamente via fontFamily; o patch abaixo respeita fontFamily já definido.
+  serifMedium: 'Spectral_500Medium',
+  serif: 'Spectral_600SemiBold',
+  serifBold: 'Spectral_700Bold',
 };
 
 const WEIGHT_TO_FAMILY: Record<string, string> = {
