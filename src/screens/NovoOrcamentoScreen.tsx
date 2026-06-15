@@ -26,6 +26,7 @@ type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'NovoOrcamento'>;
 
 const STEPS = ['Cliente', 'Itens', 'Detalhes', 'Personalizar'];
+const useNativeAnimations = Platform.OS !== 'web';
 
 const defaultFormas: FormaPagamento = { credito: false, debito: false, dinheiro: false, pix: true };
 
@@ -80,7 +81,7 @@ export default function NovoOrcamentoScreen() {
 
   const animateStep = useCallback((dir: 1 | -1) => {
     slide.setValue(dir * 40);
-    Animated.spring(slide, { toValue: 0, useNativeDriver: true, friction: 9, tension: 60 }).start();
+    Animated.spring(slide, { toValue: 0, useNativeDriver: useNativeAnimations, friction: 9, tension: 60 }).start();
   }, [slide]);
 
   function goNext() {
