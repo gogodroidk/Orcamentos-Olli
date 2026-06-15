@@ -46,6 +46,7 @@ Pré-requisitos: **Node.js LTS** e o app **Expo Go** (ou um *development build*)
 
 ```bash
 npm install
+npm run preflight
 npm start        # inicia o Metro / Expo
 npm run android  # roda no Android
 npm run ios      # roda no iOS
@@ -60,3 +61,17 @@ npm run web      # versão web
 - As pastas nativas `android/` e `ios/` são **geradas** pelo Expo (`expo prebuild`) e, por isso,
   não são versionadas (ver `.gitignore`). Rode `npx expo prebuild` para recriá-las localmente.
 - Identificador do app: `com.grtech.olliorcamentos`.
+- Credenciais públicas do app Expo ficam em `.env.local`, baseado em `.env.example`.
+- A prévia web do app Expo usa `metro.config.js` para carregar o WASM do `expo-sqlite`.
+
+## ✅ Verificações
+
+```bash
+npm run preflight
+```
+
+Com o servidor web Expo aberto em `http://127.0.0.1:8082`, também é possível validar a Home e o início do fluxo:
+
+```bash
+npm run qa:web
+```

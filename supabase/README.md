@@ -30,17 +30,17 @@ Tabelas criadas, **todas com RLS** (cada usuário só acessa os próprios dados,
 
 ## Migração
 
-`migrations/0001_create_core_orcamentos_schema.sql` — já aplicada. Para replicar em outro ambiente, basta rodar esse SQL.
+`migrations/0001_create_core_orcamentos_schema.sql` — schema inicial já aplicado.
+
+`migrations/20260615160744_harden_rls_and_function_permissions.sql` — revoga execução pública da função administrativa `rls_auto_enable()` e otimiza policies RLS com `(select auth.uid())`.
 
 ## Pendências de segurança (recomendado, não bloqueiam)
 
-O linter aponta 2 itens **pré-existentes** (não vieram desta migração):
+O linter aponta 1 item operacional que precisa ser ligado no dashboard:
 
-1. **Função `public.rls_auto_enable()` (SECURITY DEFINER) exposta** a `anon`/`authenticated`. Se não for usada, corrija com:
-   ```sql
-   revoke execute on function public.rls_auto_enable() from anon, authenticated;
-   ```
-2. **Proteção contra senhas vazadas desligada.** Ligar em: Dashboard → Authentication → Providers → Password → *Leaked password protection*.
+1. **Proteção contra senhas vazadas desligada.** Ligar em: Dashboard → Authentication → Providers → Password → *Leaked password protection*.
+
+Já corrigido por migration: a função `public.rls_auto_enable()` não é mais executável por `anon`, `authenticated` ou `public`.
 
 ## Próximos passos
 

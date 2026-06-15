@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, ViewStyle, Easing } from 'react-native';
+import { Animated, ViewStyle, Easing, Platform } from 'react-native';
 
 interface Props {
   children: React.ReactNode;
@@ -8,6 +8,8 @@ interface Props {
   delay?: number;
   from?: 'bottom' | 'right' | 'scale';
 }
+
+const useNativeAnimations = Platform.OS !== 'web';
 
 /**
  * Entrada animada (fade + deslize/escala) para itens de lista e cards.
@@ -22,7 +24,7 @@ export function AnimatedEntrance({ children, index = 0, style, delay = 0, from =
       duration: 380,
       delay: delay + Math.min(index, 12) * 55,
       easing: Easing.out(Easing.cubic),
-      useNativeDriver: true,
+      useNativeDriver: useNativeAnimations,
     }).start();
   }, []);
 

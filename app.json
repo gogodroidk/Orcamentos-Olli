@@ -6,11 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#0A2540"
-    },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.grtech.olliorcamentos"
@@ -43,7 +38,14 @@
         }
       ],
       "expo-font",
-      "expo-splash-screen"
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "backgroundColor": "#0A2540",
+          "imageWidth": 180
+        }
+      ]
     ],
     "extra": {
       "eas": {

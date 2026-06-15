@@ -1,10 +1,17 @@
+declare const process: {
+  env: {
+    EXPO_PUBLIC_SUPABASE_URL?: string;
+    EXPO_PUBLIC_SUPABASE_ANON_KEY?: string;
+  };
+};
+
 /**
- * ─── CONFIGURAÇÃO DA NUVEM (Supabase) ───────────────────────────
- * Cole aqui os 2 valores do seu projeto Supabase.
- * Onde achar: app.supabase.com → seu projeto → Settings → API
+ * Configuração pública da nuvem (Supabase).
  *
- * Enquanto estiver vazio, o app funciona normalmente OFFLINE —
- * o backup na nuvem só liga depois que você preencher.
+ * O app continua funcionando offline quando estes valores não existem.
+ * Para habilitar login e backup, crie um `.env.local` baseado em `.env.example`.
+ * Não coloque `service_role` nem chaves secretas aqui: variáveis EXPO_PUBLIC
+ * entram no bundle do aplicativo.
  */
-export const SUPABASE_URL: string = 'https://yiaeplqinnnnniyvwtls.supabase.co';
-export const SUPABASE_ANON_KEY: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpYWVwbHFpbm5ubm5peXZ3dGxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMTU5NzAsImV4cCI6MjA5NjY5MTk3MH0.P_EF248NN0y7XJ47FmUuqwW00N2gvjq_aNJBqan2COk';
+export const SUPABASE_URL: string = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
+export const SUPABASE_ANON_KEY: string = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '';
