@@ -87,14 +87,14 @@ export default function Step4Personalizacao({ orc, onChange }: Props) {
 
       <Text style={styles.sectionTitle}>Aprovação</Text>
       <SwitchRow
-        label="Botão de aprovar orçamento"
-        hint="Cliente pode aprovar pelo PDF"
+        label="Orientação para aprovar"
+        hint="O PDF orienta o cliente a confirmar pelo WhatsApp"
         value={orc.exibirAprovacao}
         onValueChange={v => onChange({ exibirAprovacao: v })}
       />
       <SwitchRow
-        label="Botão de recusar orçamento"
-        hint="Cliente pode recusar pelo PDF"
+        label="Orientação para recusar"
+        hint="O PDF orienta o cliente a avisar o prestador"
         value={orc.exibirRecusa}
         onValueChange={v => onChange({ exibirRecusa: v })}
       />

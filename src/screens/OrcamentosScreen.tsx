@@ -230,7 +230,8 @@ const styles = StyleSheet.create({
 
   searchRow: {
     flexDirection: 'row', alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.surfaceVariant,
+    borderWidth: 1, borderColor: Colors.outline,
     marginTop: 14, borderRadius: BorderRadius.lg,
     paddingHorizontal: Spacing.base, paddingVertical: 11,
   },

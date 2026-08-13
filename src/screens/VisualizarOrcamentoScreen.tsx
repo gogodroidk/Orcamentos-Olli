@@ -208,6 +208,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start',
     backgroundColor: Colors.surface, borderRadius: BorderRadius.lg,
     padding: Spacing.base, marginBottom: 12, ...Shadow.sm,
+    borderWidth: 1, borderColor: Colors.outline,
   },
   numLabel: { fontSize: 18, fontWeight: '800', color: Colors.onSurface },
   dateLabel: { fontSize: 12, color: Colors.onSurfaceVariant, marginTop: 2 },

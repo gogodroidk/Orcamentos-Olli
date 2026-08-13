@@ -72,7 +72,7 @@ Mudanças já aplicadas no working tree (incluídas neste zip). A base agora ins
 ## 3. DECISÕES TOMADAS (não reabrir sem motivo)
 - **SaaS desde já** (o dono quer vender p/ outros prestadores). Multiempresa já está no DNA via RLS por usuário.
   Para times (papéis admin/funcionário) será preciso uma camada de organização → usuários (fase posterior).
-- **Cobrança/billing:** Stripe (quando o núcleo estiver vendável). 
+- **Cobrança/billing:** Stripe (quando o núcleo estiver vendável).
 - **iPhone via PWA** (sem taxa Apple de US$99/ano); **Android nativo** (Play, US$25 único); **Web = painel do patrão**.
 - **Tema do app = ESCURO "cockpit"**; **documentos (PDF, link do cliente) = CLARO** (ver paleta `Doc`).
 - **Banco híbrido** (jsonb + colunas) espelhando o storage atual do app.

@@ -228,6 +228,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.surface, marginBottom: Spacing.base,
     borderRadius: BorderRadius.lg, padding: Spacing.base, ...Shadow.sm,
+    borderWidth: 1, borderColor: Colors.outline,
   },
   sectionTitle: { fontSize: 16, fontWeight: '800', color: Colors.onSurface, marginBottom: Spacing.base },
   fieldLabel: { fontSize: 13, fontWeight: '600', color: Colors.onSurfaceVariant, marginBottom: 4, marginTop: 8 },

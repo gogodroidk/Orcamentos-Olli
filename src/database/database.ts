@@ -1,14 +1,22 @@
 import * as SQLite from 'expo-sqlite';
 import { Cliente, ServicoItem, ProdutoItem, Orcamento, Recibo, Empresa, ModeloOrcamento, Depoimento } from '../types';
 
-let db: SQLite.SQLiteDatabase | null = null;
+let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
 export async function getDb(): Promise<SQLite.SQLiteDatabase> {
-  if (!db) {
-    db = await SQLite.openDatabaseAsync('olli_orcamentos.db');
-    await initDb(db);
+  if (!dbPromise) {
+    dbPromise = SQLite.openDatabaseAsync('olli_orcamentos.db')
+      .then(async database => {
+        await initDb(database);
+        return database;
+      })
+      .catch(error => {
+        // Permite uma nova tentativa depois de falha transitória de abertura/migração.
+        dbPromise = null;
+        throw error;
+      });
   }
-  return db;
+  return dbPromise;
 }
 
 async function initDb(database: SQLite.SQLiteDatabase) {

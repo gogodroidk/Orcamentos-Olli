@@ -48,10 +48,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary, paddingTop: 48, paddingBottom: 20,
     paddingHorizontal: Spacing.base,
   },
-  title: { fontSize: 22, fontWeight: '800', color: '#fff' },
+  title: { fontSize: 22, fontWeight: '800', color: Colors.onSurface },
   card: {
     backgroundColor: Colors.surface, borderRadius: BorderRadius.lg,
     padding: Spacing.base, flexDirection: 'row', alignItems: 'center',
+    borderWidth: 1, borderColor: Colors.outline,
     ...Shadow.sm,
   },
   iconBg: { width: 56, height: 56, borderRadius: BorderRadius.md, alignItems: 'center', justifyContent: 'center' },

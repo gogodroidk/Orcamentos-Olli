@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   noResults: { fontSize: 13, color: Colors.onSurfaceMuted, marginTop: 12, textAlign: 'center' },
   selectedCard: {
     flexDirection: 'row', alignItems: 'center',
-    backgroundColor: '#fff', borderRadius: BorderRadius.lg,
+    backgroundColor: Colors.surface, borderRadius: BorderRadius.lg,
     padding: Spacing.base, marginTop: Spacing.base,
     borderWidth: 1.5, borderColor: Colors.success,
     ...Shadow.md,

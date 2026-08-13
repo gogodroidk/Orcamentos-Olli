@@ -49,7 +49,7 @@ function TabNavigator() {
         tabBarActiveTintColor: Colors.tabActive,
         tabBarInactiveTintColor: Colors.tabInactive,
         tabBarStyle: {
-          backgroundColor: '#fff',
+          backgroundColor: Colors.surfaceVariant,
           borderTopWidth: 1,
           borderTopColor: Colors.outline,
           height: 60 + insets.bottom,

@@ -20,7 +20,7 @@ public/registerSW.js
 # typescript
 *.tsbuildinfo
 
-# NOTE: web/.env is intentionally committed for this project because it only
-# contains the PUBLIC Supabase anon key (RLS protects the data). Keep real
-# secrets out of .env. Local overrides go in .env*.local (ignored below).
+# A configuração do ambiente fica somente na máquina. O repositório publica
+# apenas `.env.example`, mesmo quando os valores de runtime são chaves públicas.
+.env
 .env*.local

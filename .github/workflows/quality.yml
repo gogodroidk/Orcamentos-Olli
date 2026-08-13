@@ -1,0 +1,32 @@
+name: Qualidade
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.19.4
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            web/package-lock.json
+      - name: Instalar dependências reproduzíveis
+        run: npm ci
+      - name: Validar TypeScript, testes e Expo
+        run: npm run preflight
+      - name: Instalar dependências do painel
+        working-directory: web
+        run: npm ci
+      - name: Compilar painel PWA
+        working-directory: web
+        run: npm run build

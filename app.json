@@ -47,10 +47,6 @@
         }
       ]
     ],
-    "extra": {
-      "eas": {
-        "projectId": "olli-orcamentos"
-      }
-    }
+    "extra": {}
   }
 }

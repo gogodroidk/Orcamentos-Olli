@@ -14,6 +14,7 @@ import { getOrcamento, getNextOrcamentoNumber, saveOrcamento } from '../database
 import { Orcamento, ItemOrcamento, FormaPagamento } from '../types';
 import { generateId } from '../utils/id';
 import { nowISO, todayISO } from '../utils/date';
+import { calculateBudgetTotals } from '../utils/budget';
 import { RootStackParamList } from '../navigation/AppNavigator';
 
 // Steps
@@ -54,18 +55,6 @@ function emptyOrcamento(numero: string): Orcamento {
     criadoEm: nowISO(),
     atualizadoEm: nowISO(),
   };
-}
-
-function calcTotais(o: Orcamento): Orcamento {
-  const servicos = o.itens.filter(i => i.tipo === 'servico').reduce((s, i) => s + i.subtotal, 0);
-  const produtos = o.itens.filter(i => i.tipo === 'produto').reduce((s, i) => s + i.subtotal, 0);
-  const subtotal = servicos + produtos;
-  let desconto = o.desconto;
-  if (o.descontoTipo === 'percentual') {
-    desconto = subtotal * (o.desconto / 100);
-  }
-  const valorTotal = Math.max(0, subtotal - desconto);
-  return { ...o, subtotalServicos: servicos, subtotalProdutos: produtos, subtotal, valorTotal };
 }
 
 export default function NovoOrcamentoScreen() {
@@ -110,7 +99,7 @@ export default function NovoOrcamentoScreen() {
     setOrc(prev => {
       if (!prev) return prev;
       const updated = { ...prev, ...partial, atualizadoEm: nowISO() };
-      return calcTotais(updated);
+      return calculateBudgetTotals(updated);
     });
   }
 
@@ -135,7 +124,7 @@ export default function NovoOrcamentoScreen() {
       status: orc.status === 'rascunho' ? 'enviado' : orc.status,
       atualizadoEm: nowISO(),
     };
-    await saveOrcamento(calcTotais(toSave));
+    await saveOrcamento(calculateBudgetTotals(toSave));
     setSaving(false);
     nav.navigate('VisualizarOrcamento', { orcamentoId: toSave.id });
   }
@@ -143,7 +132,7 @@ export default function NovoOrcamentoScreen() {
   async function handleRascunho() {
     if (!orc) return;
     setSaving(true);
-    await saveOrcamento(calcTotais({ ...orc, atualizadoEm: nowISO() }));
+    await saveOrcamento(calculateBudgetTotals({ ...orc, atualizadoEm: nowISO() }));
     setSaving(false);
     Alert.alert('Salvo!', 'Orçamento salvo como rascunho.', [
       { text: 'OK', onPress: () => nav.goBack() },

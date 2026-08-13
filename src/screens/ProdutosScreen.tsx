@@ -146,7 +146,7 @@ export default function ProdutosScreen() {
               <View style={styles.unidadesRow}>
                 {UNIDADES.map(u => (
                   <TouchableOpacity key={u} style={[styles.unidade, editing.unidade === u && styles.unidadeActive]} onPress={() => setEditing(p => p ? { ...p, unidade: u } : p)}>
-                    <Text style={[styles.unidadeText, editing.unidade === u && { color: '#fff' }]}>{u}</Text>
+                    <Text style={[styles.unidadeText, editing.unidade === u && { color: Colors.onSurface }]}>{u}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -163,11 +163,11 @@ export default function ProdutosScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
-  searchBar: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: BorderRadius.lg, paddingHorizontal: 14, paddingVertical: 11, gap: 8, marginTop: 14 },
+  searchBar: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.surfaceVariant, borderRadius: BorderRadius.lg, paddingHorizontal: 14, paddingVertical: 11, gap: 8, marginTop: 14, borderWidth: 1, borderColor: Colors.outline },
   searchInput: { flex: 1, fontSize: 15, color: Colors.onSurface },
   card: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.surface, borderRadius: BorderRadius.lg, padding: Spacing.md, ...Shadow.sm },
   thumb: { width: 52, height: 52, borderRadius: BorderRadius.md },
-  thumbPlaceholder: { backgroundColor: '#E0F2FE', justifyContent: 'center', alignItems: 'center' },
+  thumbPlaceholder: { backgroundColor: Colors.surfaceVariant, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Colors.outline },
   name: { fontSize: 15, fontWeight: '700', color: Colors.onSurface },
   desc: { fontSize: 12, color: Colors.onSurfaceVariant, marginTop: 2 },
   tagsRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 5 },
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: Spacing.base, paddingVertical: Spacing.base, paddingTop: 56, backgroundColor: Colors.surface, borderBottomWidth: 1, borderBottomColor: Colors.outline },
   modalTitle: { fontSize: 20, fontWeight: '800', color: Colors.onSurface },
   modalFooter: { padding: Spacing.base, paddingBottom: 28, backgroundColor: Colors.surface, borderTopWidth: 1, borderTopColor: Colors.outline },
-  fotoBtn: { height: 120, borderRadius: BorderRadius.lg, borderWidth: 1.5, borderColor: ACCENT, borderStyle: 'dashed', justifyContent: 'center', alignItems: 'center', marginBottom: Spacing.base, overflow: 'hidden', backgroundColor: '#E0F2FE60' },
+  fotoBtn: { height: 120, borderRadius: BorderRadius.lg, borderWidth: 1.5, borderColor: ACCENT, borderStyle: 'dashed', justifyContent: 'center', alignItems: 'center', marginBottom: Spacing.base, overflow: 'hidden', backgroundColor: Colors.surfaceVariant },
   fotoPreview: { width: '100%', height: '100%' },
   fotoBtnLabel: { fontSize: 13, color: ACCENT, fontWeight: '700', marginTop: 4 },
   margemBanner: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: Colors.successLight, borderRadius: BorderRadius.md, padding: 12, marginBottom: Spacing.base },

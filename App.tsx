@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { StatusBar, View, Text, StyleSheet, Animated, Easing, Platform } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { StatusBar, View, Text, StyleSheet, Animated, Easing, Platform, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
@@ -14,11 +14,6 @@ import {
   PlusJakartaSans_700Bold,
   PlusJakartaSans_800ExtraBold,
 } from '@expo-google-fonts/plus-jakarta-sans';
-import {
-  Spectral_500Medium,
-  Spectral_600SemiBold,
-  Spectral_700Bold,
-} from '@expo-google-fonts/spectral';
 import { AppTheme, Colors } from './src/theme';
 import { Fonts, applyFontPatch } from './src/theme/fonts';
 import { OlliLogo } from './src/components/OlliLogo';
@@ -51,29 +46,54 @@ function BrandSplash() {
   );
 }
 
+function StartupError({ message, onRetry }: { message: string; onRetry: () => void }) {
+  return (
+    <View style={styles.startupError} accessibilityRole="alert">
+      <OlliLogo size={72} />
+      <Text style={styles.startupErrorTitle}>Não foi possível abrir seus dados</Text>
+      <Text style={styles.startupErrorText}>{message}</Text>
+      <TouchableOpacity
+        style={styles.retryButton}
+        onPress={onRetry}
+        accessibilityRole="button"
+        accessibilityLabel="Tentar abrir o aplicativo novamente"
+      >
+        <Text style={styles.retryButtonText}>Tentar novamente</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
 export default function App() {
   const [dbReady, setDbReady] = useState(false);
+  const [dbError, setDbError] = useState<string | null>(null);
   const [fontsLoaded] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
     PlusJakartaSans_700Bold,
     PlusJakartaSans_800ExtraBold,
-    Spectral_500Medium,
-    Spectral_600SemiBold,
-    Spectral_700Bold,
   });
+
+  const initializeDatabase = useCallback(async () => {
+    setDbError(null);
+    setDbReady(false);
+    const start = Date.now();
+    try {
+      await getDb();
+      const wait = Math.max(0, 1000 - (Date.now() - start));
+      if (wait > 0) await new Promise(resolve => setTimeout(resolve, wait));
+      setDbReady(true);
+    } catch (error) {
+      console.error('Falha ao inicializar o banco local', error);
+      setDbError('O banco local não iniciou. Seus dados não foram apagados. Tente novamente.');
+    }
+  }, []);
 
   useEffect(() => {
     SplashScreen.hideAsync().catch(() => {});
-    const start = Date.now();
-    getDb()
-      .then(() => {
-        const wait = Math.max(0, 1000 - (Date.now() - start));
-        setTimeout(() => setDbReady(true), wait);
-      })
-      .catch(console.error);
-  }, []);
+    initializeDatabase();
+  }, [initializeDatabase]);
 
   // aplica o patch de fonte de forma síncrona (idempotente) antes de renderizar
   if (fontsLoaded) applyFontPatch();
@@ -85,13 +105,17 @@ export default function App() {
       <SafeAreaProvider>
         <PaperProvider theme={AppTheme}>
           <StatusBar backgroundColor="transparent" translucent barStyle="light-content" />
-          {ready ? (
-            <NavigationContainer>
-              <AppNavigator />
-            </NavigationContainer>
-          ) : (
-            <BrandSplash />
-          )}
+          <View style={[styles.appFrame, Platform.OS === 'web' && styles.webFrame]}>
+            {dbError ? (
+              <StartupError message={dbError} onRetry={initializeDatabase} />
+            ) : ready ? (
+              <NavigationContainer>
+                <AppNavigator />
+              </NavigationContainer>
+            ) : (
+              <BrandSplash />
+            )}
+          </View>
         </PaperProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
@@ -99,7 +123,39 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  appFrame: { flex: 1, backgroundColor: Colors.background },
+  webFrame: { width: '100%', maxWidth: 430, alignSelf: 'center', overflow: 'hidden' },
   splash: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.primaryDark },
   brand: { fontSize: 42, fontFamily: Fonts.extraBold, color: '#fff', letterSpacing: 5, marginTop: 22 },
   tagline: { fontSize: 13, fontFamily: Fonts.semiBold, color: Colors.accent, letterSpacing: 1, marginTop: 4 },
+  startupError: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 28,
+    backgroundColor: Colors.background,
+  },
+  startupErrorTitle: {
+    marginTop: 20,
+    fontSize: 20,
+    fontFamily: Fonts.bold,
+    color: Colors.onSurface,
+    textAlign: 'center',
+  },
+  startupErrorText: {
+    marginTop: 10,
+    fontSize: 14,
+    fontFamily: Fonts.regular,
+    color: Colors.onSurfaceVariant,
+    lineHeight: 21,
+    textAlign: 'center',
+  },
+  retryButton: {
+    marginTop: 22,
+    paddingHorizontal: 22,
+    paddingVertical: 13,
+    borderRadius: 14,
+    backgroundColor: Colors.primary,
+  },
+  retryButtonText: { color: '#fff', fontSize: 15, fontFamily: Fonts.bold },
 });

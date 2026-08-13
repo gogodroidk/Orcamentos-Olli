@@ -7,11 +7,6 @@ export const Fonts = {
   semiBold: 'PlusJakartaSans_600SemiBold',
   bold: 'PlusJakartaSans_700Bold',
   extraBold: 'PlusJakartaSans_800ExtraBold',
-  // Serifada editorial (Spectral) — títulos de documento e números de destaque (PDF, "Orçamento", totais).
-  // Usada explicitamente via fontFamily; o patch abaixo respeita fontFamily já definido.
-  serifMedium: 'Spectral_500Medium',
-  serif: 'Spectral_600SemiBold',
-  serifBold: 'Spectral_700Bold',
 };
 
 const WEIGHT_TO_FAMILY: Record<string, string> = {
@@ -49,8 +44,13 @@ function patch(Comp: any) {
     const flat = StyleSheet.flatten((el.props as any).style) || {};
     const weight = flat.fontWeight != null ? String(flat.fontWeight) : '400';
     const family = flat.fontFamily || WEIGHT_TO_FAMILY[weight] || Fonts.regular;
-    return React.cloneElement(el as any, {
-      style: [(el.props as any).style, { fontFamily: family, fontWeight: undefined }],
-    });
+    // O render interno do React Native Web devolve um elemento DOM (`span`).
+    // Elementos DOM esperam um objeto em `style`; repassar um array aqui quebra
+    // a inicialização web com propriedades numéricas no CSSStyleDeclaration.
+    const style = StyleSheet.flatten([
+      (el.props as any).style,
+      { fontFamily: family, fontWeight: undefined },
+    ]);
+    return React.cloneElement(el as any, { style });
   };
 }

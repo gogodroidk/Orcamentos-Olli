@@ -4,6 +4,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 import { Orcamento, Empresa, Depoimento, ItemOrcamento } from '../types';
 import { formatCurrency, formatNumber } from './currency';
 import { formatDateTime, formatDateBR } from './date';
+import { escapeHtml as h } from './html';
 
 /* ─── Cache de imagens em base64 ──────────────────────────────────
  * URIs locais (file://) NÃO renderizam no expo-print do Android.
@@ -49,7 +50,8 @@ function safeFileName(s: string): string {
 }
 
 function renderStars(n: number): string {
-  return '★'.repeat(n) + '☆'.repeat(5 - n);
+  const safeCount = Math.max(0, Math.min(5, Math.trunc(n || 0)));
+  return '★'.repeat(safeCount) + '☆'.repeat(5 - safeCount);
 }
 
 function renderFotos(o: Orcamento): string {
@@ -75,12 +77,12 @@ function renderItens(itens: ItemOrcamento[], tipo: 'servico' | 'produto'): strin
       <td class="item-name">
         ${img(item.fotoUri) ? `<img src="${img(item.fotoUri)}" class="item-thumb" />` : ''}
         <div>
-          <strong>${item.nome}</strong>
-          ${item.descricao ? `<br/><span class="item-desc">${item.descricao}</span>` : ''}
+          <strong>${h(item.nome)}</strong>
+          ${item.descricao ? `<br/><span class="item-desc">${h(item.descricao)}</span>` : ''}
         </div>
       </td>
       <td class="text-right">
-        <span class="label-small">Valor por ${item.unidade}</span><br/>
+        <span class="label-small">Valor por ${h(item.unidade)}</span><br/>
         <strong>${formatCurrency(item.preco)}</strong>
       </td>
       <td class="text-right">
@@ -126,8 +128,8 @@ function renderPagamento(o: Orcamento): string {
   if (o.formasPagamento?.dinheiro) formas.push('<div class="payment-method">Dinheiro</div>');
 
   const sinalStr = o.sinalPercentual
-    ? `Sinal de ${formatCurrency(o.sinalValor ?? 0)} (${o.sinalPercentual}%) em ${o.sinalData ? formatDateBR(o.sinalData) : '—'}`
-    : (o.condicoesPagamento ?? '');
+    ? `Sinal de ${formatCurrency(o.sinalValor ?? 0)} (${h(o.sinalPercentual)}%) em ${o.sinalData ? h(formatDateBR(o.sinalData)) : '—'}`
+    : h(o.condicoesPagamento ?? '');
 
   const restante = o.sinalValor ? `Valor restante ${formatCurrency(o.valorTotal - (o.sinalValor ?? 0))}` : '';
 
@@ -153,7 +155,7 @@ function renderPagamento(o: Orcamento): string {
           </tr>
         </tbody>
       </table>
-      ${o.chavePix ? `<div class="pix-box"><strong>Chave PIX:</strong> ${o.chavePix}</div>` : ''}
+      ${o.chavePix ? `<div class="pix-box"><strong>Chave PIX:</strong> ${h(o.chavePix)}</div>` : ''}
     </div>
   `;
 }
@@ -186,17 +188,17 @@ export function gerarHtmlOrcamento(o: Orcamento, empresa: Empresa, depoimentos: 
     <div class="section-label">Depoimentos e avaliações</div>
     ${depoimentos.map(d => `
       <div class="depoimento">
-        <strong>${d.nomeCliente}</strong><br/>
+        <strong>${h(d.nomeCliente)}</strong><br/>
         <span class="stars" style="color:#F59E0B">${renderStars(d.estrelas)}</span>
-        ${d.texto ? `<p class="depo-text">${d.texto}</p>` : ''}
+        ${d.texto ? `<p class="depo-text">${h(d.texto)}</p>` : ''}
       </div>
     `).join('')}
   ` : '';
 
   const aprovacaoHtml = `
     <div style="margin:24px 0 8px 0;">
-      ${o.exibirRecusa ? `<div class="btn-recusar">Recusar — Toque aqui para recusar este orçamento.</div>` : ''}
-      ${o.exibirAprovacao ? `<div class="btn-aprovar">Aprovar orçamento — Toque aqui para aprovar este orçamento.</div>` : ''}
+      ${o.exibirRecusa ? `<div class="btn-recusar">Para recusar, avise o prestador pelo WhatsApp.</div>` : ''}
+      ${o.exibirAprovacao ? `<div class="btn-aprovar">Para aprovar, confirme com o prestador pelo WhatsApp.</div>` : ''}
     </div>
   `;
 
@@ -321,20 +323,20 @@ export function gerarHtmlOrcamento(o: Orcamento, empresa: Empresa, depoimentos: 
       <div class="empresa-brand">
         ${img(empresa.logoUri) ? `<img src="${img(empresa.logoUri)}" class="empresa-logo" />` : ''}
         <div>
-          <div class="empresa-nome">${empresa.nome}</div>
-          <div class="empresa-esp">${empresa.especialidade}</div>
+          <div class="empresa-nome">${h(empresa.nome)}</div>
+          <div class="empresa-esp">${h(empresa.especialidade)}</div>
         </div>
       </div>
       <div class="empresa-details">
-        ${empresa.cnpj ? `CNPJ: ${empresa.cnpj}<br/>` : ''}
-        ${empresa.endereco ? `${empresa.endereco}${empresa.cidade ? ` — ${empresa.cidade}/${empresa.estado}` : ''}<br/>` : ''}
-        ${empresa.telefone ? `Tel: ${empresa.telefone}` : ''}${empresa.site ? ` &nbsp;·&nbsp; ${empresa.site}` : ''}
+        ${empresa.cnpj ? `CNPJ: ${h(empresa.cnpj)}<br/>` : ''}
+        ${empresa.endereco ? `${h(empresa.endereco)}${empresa.cidade ? ` — ${h(empresa.cidade)}/${h(empresa.estado)}` : ''}<br/>` : ''}
+        ${empresa.telefone ? `Tel: ${h(empresa.telefone)}` : ''}${empresa.site ? ` &nbsp;·&nbsp; ${h(empresa.site)}` : ''}
       </div>
     </div>
     <div>
       <div class="orcamento-box">
         <div class="orcamento-box-label">ORÇAMENTO</div>
-        <div class="orcamento-box-num">Nº ${o.numero}</div>
+        <div class="orcamento-box-num">Nº ${h(o.numero)}</div>
       </div>
       <div class="doc-date" style="text-align:right;margin-top:8px;">Emitido em ${formatDateTime(o.criadoEm)}</div>
     </div>
@@ -343,10 +345,10 @@ export function gerarHtmlOrcamento(o: Orcamento, empresa: Empresa, depoimentos: 
   <!-- CLIENTE -->
   <div class="cliente-section">
     <div class="section-label">Cliente</div>
-    <div class="cliente-nome">${o.clienteNome}</div>
-    <div class="cliente-info">${o.clienteTelefone}</div>
-    ${o.clienteCpfCnpj ? `<div class="cliente-info">CPF/CNPJ: ${o.clienteCpfCnpj}</div>` : ''}
-    ${o.clienteEndereco ? `<div class="cliente-info">${o.clienteEndereco}</div>` : ''}
+    <div class="cliente-nome">${h(o.clienteNome)}</div>
+    <div class="cliente-info">${h(o.clienteTelefone)}</div>
+    ${o.clienteCpfCnpj ? `<div class="cliente-info">CPF/CNPJ: ${h(o.clienteCpfCnpj)}</div>` : ''}
+    ${o.clienteEndereco ? `<div class="cliente-info">${h(o.clienteEndereco)}</div>` : ''}
   </div>
 
   <!-- DATAS INFO BOXES -->
@@ -361,13 +363,13 @@ export function gerarHtmlOrcamento(o: Orcamento, empresa: Empresa, depoimentos: 
       ${o.dataVisitaTecnica ? `
         <div class="info-box">
           <div class="info-box-label">Visita técnica em:</div>
-          <div class="info-box-value">${o.dataVisitaTecnica}</div>
+          <div class="info-box-value">${h(o.dataVisitaTecnica)}</div>
         </div>
       ` : ''}
       ${o.agendamentoServico ? `
         <div class="info-box">
           <div class="info-box-label">Agendamento do serviço:</div>
-          <div class="info-box-value">${o.agendamentoServico}</div>
+          <div class="info-box-value">${h(o.agendamentoServico)}</div>
         </div>
       ` : ''}
     </div>
@@ -390,7 +392,7 @@ export function gerarHtmlOrcamento(o: Orcamento, empresa: Empresa, depoimentos: 
   ${o.condicoesContratuais ? `
     <div class="text-section">
       <div class="text-section-title">Condições contratuais</div>
-      <div class="text-section-content">${o.condicoesContratuais}</div>
+      <div class="text-section-content">${h(o.condicoesContratuais)}</div>
     </div>
   ` : ''}
 
@@ -398,7 +400,7 @@ export function gerarHtmlOrcamento(o: Orcamento, empresa: Empresa, depoimentos: 
   ${o.garantia ? `
     <div class="text-section">
       <div class="text-section-title">Garantia</div>
-      <div class="text-section-content">${o.garantia}</div>
+      <div class="text-section-content">${h(o.garantia)}</div>
     </div>
   ` : ''}
 
@@ -406,7 +408,7 @@ export function gerarHtmlOrcamento(o: Orcamento, empresa: Empresa, depoimentos: 
   ${o.informacoesAdicionais ? `
     <div class="text-section">
       <div class="text-section-title">Informações adicionais</div>
-      <div class="text-section-content">${o.informacoesAdicionais}</div>
+      <div class="text-section-content">${h(o.informacoesAdicionais)}</div>
     </div>
   ` : ''}
 
@@ -417,7 +419,7 @@ export function gerarHtmlOrcamento(o: Orcamento, empresa: Empresa, depoimentos: 
         ${img(o.assinaturaPrestadorUri) || img(empresa.assinaturaUri) ? `<img src="${img(o.assinaturaPrestadorUri) || img(empresa.assinaturaUri)}" class="signature-img" />` : '<div style="height:60px;"></div>'}
         <div class="signature-line">
           <div>Prestador de serviço</div>
-          <div class="signature-name">${empresa.nomePrestador}</div>
+          <div class="signature-name">${h(empresa.nomePrestador)}</div>
           <div style="font-size:11px;color:#888;">${formatDateTime(o.criadoEm)}</div>
         </div>
       </div>
@@ -426,8 +428,8 @@ export function gerarHtmlOrcamento(o: Orcamento, empresa: Empresa, depoimentos: 
           ${img(o.assinaturaClienteUri) ? `<img src="${img(o.assinaturaClienteUri)}" class="signature-img" />` : '<div style="height:60px;"></div>'}
           <div class="signature-line">
             <div>Cliente</div>
-            <div class="signature-name">${o.clienteNome}</div>
-            <div style="font-size:11px;color:#888;">${o.dataAssinaturaCliente ?? 'Data não informada'}</div>
+            <div class="signature-name">${h(o.clienteNome)}</div>
+            <div style="font-size:11px;color:#888;">${h(o.dataAssinaturaCliente ?? 'Data não informada')}</div>
           </div>
         </div>
       ` : ''}
@@ -444,15 +446,15 @@ export function gerarHtmlOrcamento(o: Orcamento, empresa: Empresa, depoimentos: 
     <div class="pro-card">
       ${img(empresa.logoUri) ? `<img src="${img(empresa.logoUri)}" class="pro-logo" />` : ''}
       <div>
-        <div class="pro-card-name">${empresa.nome}</div>
+        <div class="pro-card-name">${h(empresa.nome)}</div>
         <div class="pro-card-info">
-          ${empresa.slogan}<br/>
-          ${empresa.cidade} – ${empresa.estado}<br/>
-          ${empresa.telefone}<br/>
-          ${empresa.site ? `${empresa.site}<br/>` : ''}
-          ${empresa.email ? `${empresa.email}<br/>` : ''}
-          ${empresa.cnpj ? `CNPJ: ${empresa.cnpj}<br/>` : ''}
-          ${empresa.normas}
+          ${h(empresa.slogan)}<br/>
+          ${h(empresa.cidade)} – ${h(empresa.estado)}<br/>
+          ${h(empresa.telefone)}<br/>
+          ${empresa.site ? `${h(empresa.site)}<br/>` : ''}
+          ${empresa.email ? `${h(empresa.email)}<br/>` : ''}
+          ${empresa.cnpj ? `CNPJ: ${h(empresa.cnpj)}<br/>` : ''}
+          ${h(empresa.normas)}
         </div>
       </div>
     </div>
@@ -467,8 +469,8 @@ export function gerarHtmlOrcamento(o: Orcamento, empresa: Empresa, depoimentos: 
 
   <!-- FOOTER -->
   <div class="doc-footer">
-    <div>${empresa.nome} | CNPJ: ${empresa.cnpj} | ${empresa.endereco}</div>
-    <div>${empresa.telefone} | Documento gerado em ${formatDateTime(o.criadoEm)}</div>
+    <div>${h(empresa.nome)} | CNPJ: ${h(empresa.cnpj)} | ${h(empresa.endereco)}</div>
+    <div>${h(empresa.telefone)} | Documento gerado em ${formatDateTime(o.criadoEm)}</div>
   </div>
 
 </div>

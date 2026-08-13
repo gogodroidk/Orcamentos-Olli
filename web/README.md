@@ -22,7 +22,7 @@ na tela inicial** do iPhone (Safari) e Android (Chrome) como um PWA.
 
 ## Configuração
 
-As credenciais públicas do Supabase ficam em `web/.env` (já incluído). A
+As credenciais públicas do Supabase ficam em `web/.env` (somente local). A
 **anon key é pública e segura no cliente** — o Row Level Security (RLS) de cada
 tabela garante que um usuário logado só enxerga as próprias linhas.
 

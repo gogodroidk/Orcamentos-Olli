@@ -33,7 +33,7 @@ export function OlliButton({
 
   const color = variant === 'outline' ? Colors.primary
     : variant === 'ghost' ? Colors.onSurfaceVariant
-    : '#fff';
+    : Colors.onSurface;
 
   const content = loading ? (
     <ActivityIndicator size="small" color={color} />

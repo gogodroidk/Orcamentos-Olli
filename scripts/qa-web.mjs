@@ -29,7 +29,9 @@ async function runViewport(name, viewport) {
   const homeShot = resolve(outDir, `qa-${name}-home.png`);
   await page.screenshot({ path: homeShot, fullPage: false });
 
-  const newBudget = page.getByText('Novo Orçamento');
+  // A ação principal aparece como "Orçar" na Home; o nome da tela continua
+  // sendo Novo Orçamento. Aceitamos ambos para o teste acompanhar a UI real.
+  const newBudget = page.getByText(/^(Orçar|Novo Orçamento)$/);
   const newBudgetCount = await newBudget.count();
   let flowText = '';
   let flowShot = '';
@@ -49,7 +51,7 @@ async function runViewport(name, viewport) {
     homeShot,
     flowShot,
     homeHasQuickActions: bodyText.includes('Ações rápidas'),
-    homeHasNewBudget: bodyText.includes('Novo Orçamento'),
+    homeHasNewBudget: bodyText.includes('Orçar') || bodyText.includes('Novo Orçamento'),
     flowReachedClientStep: flowText.includes('Cliente') || flowText.includes('Dados do Cliente'),
     consoleIssues: logs,
   };

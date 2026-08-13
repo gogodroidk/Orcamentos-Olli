@@ -139,7 +139,7 @@ export default function ServicosScreen() {
               <View style={styles.unidadesRow}>
                 {UNIDADES.map(u => (
                   <TouchableOpacity key={u} style={[styles.unidade, editing.unidade === u && styles.unidadeActive]} onPress={() => setEditing(p => p ? { ...p, unidade: u } : p)}>
-                    <Text style={[styles.unidadeText, editing.unidade === u && { color: '#fff' }]}>{u}</Text>
+                    <Text style={[styles.unidadeText, editing.unidade === u && { color: Colors.onSurface }]}>{u}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -156,7 +156,7 @@ export default function ServicosScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
-  searchBar: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: BorderRadius.lg, paddingHorizontal: 14, paddingVertical: 11, gap: 8, marginTop: 14 },
+  searchBar: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.surfaceVariant, borderRadius: BorderRadius.lg, paddingHorizontal: 14, paddingVertical: 11, gap: 8, marginTop: 14 },
   searchInput: { flex: 1, fontSize: 15, color: Colors.onSurface },
   card: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.surface, borderRadius: BorderRadius.lg, padding: Spacing.md, ...Shadow.sm },
   thumb: { width: 52, height: 52, borderRadius: BorderRadius.md },
